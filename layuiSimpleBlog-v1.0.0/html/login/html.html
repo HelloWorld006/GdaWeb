@@ -52,14 +52,12 @@
         },
         methods: {
             loginBtn() {
-                // const pUrl = "http://111.229.42.116:8080/blog/user/login";
                 const pUrl = "http://localhost:8088/gda/login?username=" + this.username+"&password="+this.password;
-                console.log(pUrl);
                 this.$http.get(pUrl).then(function (res) {
                     if (res.data.code == 200) {
-                        this.errorMsg = res.msg
+                        window.location.href = "../index.html";
                     }else {
-                        this.errorMsg = res.msg
+                        this.errorMsg = res.data.msg
                     }
                 }, function () {
                     console.log('请求失败处理');
