@@ -1,75 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>网站后台管理系统</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--可无视-->
-	<link rel="stylesheet" href="bootstrap.min.css">
-	<!--主要样式-->
-	<link type="text/css" href="style.css" rel="stylesheet"/>
-	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
-	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <title>网站后台管理系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--可无视-->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <!--主要样式-->
+    <link type="text/css" href="style.css" rel="stylesheet"/>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
 </head>
 <body>
 <div id="loginapp">
-	<div class="container" align="center">
-		<div class="col-md-6" style="margin-top: 20%;">
-			<div class="inset">
+    <div class="container" align="center">
+        <div class="col-md-6" style="margin-top: 20%;">
+            <div class="inset">
 
-				<form name="login" id="login" method="post"
-					  onSubmit="return CheckLogin(document.login);">
-					<input type="hidden" name="enews" value="login">
-					<div>
-						<h2>后台管理系统</h2> <h4 style="color: red" v-show="isShow">{{user.errorMsg}}</h4>
-						<span style="text-align: left;text-indent: 0.4em;"><label>用户名</label></span>
-						<span><input type="text" name="username" v-model="user.username" class="textbox"></span>
-					</div>
-					<div>
-						<span style="text-align: left;text-indent: 0.4em;"><label>密码</label></span>
-						<span><input name="password" type="password" v-model="user.password" class="password"></span>
-					</div>
-					<div class="sign">
-						<!--<input type="reset" class="submit" value="重置"/>-->
-						<input value="登录" class="submit" type="button" v-on:click="loginBtn()"/>
+                <form name="login" id="login" method="post"
+                      onSubmit="return CheckLogin(document.login);">
+                    <input type="hidden" name="enews" value="login">
+                    <div>
+                        <h2>后台管理系统</h2> <h4 style="color: red" v-show="isShow">{{errorMsg}}</h4>
+                        <span style="text-align: left;text-indent: 0.4em;"><label>用户名</label></span>
+                        <span><input type="text" name="username" v-model="username" class="textbox"></span>
+                    </div>
+                    <div>
+                        <span style="text-align: left;text-indent: 0.4em;"><label>密码</label></span>
+                        <span><input name="password" type="password" v-model="password" class="password"></span>
+                    </div>
+                    <div class="sign">
+                        <!--<input type="reset" class="submit" value="重置"/>-->
+                        <input value="登录" class="submit" type="button" v-on:click="loginBtn()"/>
 
-					</div>
+                    </div>
 
-				</form>
-			</div>
-		</div>
-	</div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     const loginapp = new Vue({
         el: "#loginapp",
         data: {
-            user: {
-                username: "",
-                passwoed: "",
-                errorMsg: ""
-            },
-            isShow: false
+            username: "",
+            password: "",
+            errorMsg: "",
+            isShow: true
         },
         methods: {
             loginBtn() {
                 // const pUrl = "http://111.229.42.116:8080/blog/user/login";
-                const pUrl = "http://localhost:8080/gda/login";
+                const pUrl = "http://localhost:8088/gda/login?username=" + this.username+"&password="+this.password;
                 console.log(pUrl);
-                this.$http.post(pUrl, this.user, {emulateJson: true}).then(function (res) {
-                    console.log(res)
-					debugger
+                this.$http.get(pUrl).then(function (res) {
                     if (res.data.code == 200) {
-                        window.location.href = "../about.html";
-                    } else {
-                        this.user.errorMsg = res.data.msg;
-                        this.isShow = true;
+                        this.errorMsg = res.msg
+                    }else {
+                        this.errorMsg = res.msg
                     }
-
-                }, function (res) {
-                    console.log(res.status);
+                }, function () {
+                    console.log('请求失败处理');
                 });
+
             }
         }
     })
