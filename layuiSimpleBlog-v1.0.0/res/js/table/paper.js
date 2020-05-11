@@ -10,6 +10,13 @@ layui.use('table', function () {
         , response: {
             statusCode: 200 //规定成功的状态码，默认：0
         }
+        ,parseData:function (res) {
+            return{
+                "code":res.code,
+                "msg":res.message,
+                "data":res.data.data
+            }
+        }
         , cols: [[
              {field: 'id', title: '项目id', width: 180, sort: true, fixed: true}
              ,{field: 'title', title: '项目名称', width: 180}
@@ -25,6 +32,7 @@ layui.use('table', function () {
         , page: true //是否显示分页
         , limits: [3, 5, 10, 20]
         , limit: 10 //每页默认显示的数量
+        ,count:"count"
     });
     var $ = layui.$, active = {
         reload: function () {
